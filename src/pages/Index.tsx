@@ -1,9 +1,11 @@
 import { useState, useRef, useEffect } from "react";
+import { toast } from "sonner";
 import StarsField from "@/components/StarsField";
 import IslamicPattern from "@/components/IslamicPattern";
 import PDFPreview from "@/components/PDFPreview";
-import { PRODUCT_TYPES, PRICE_SUGGESTIONS, getSampleContent } from "@/lib/constants";
+import { PRODUCT_TYPES, PRICE_SUGGESTIONS } from "@/lib/constants";
 import type { ProductTypeId } from "@/lib/constants";
+import { streamGenerate } from "@/lib/streamGenerate";
 
 type Step = "home" | "select" | "form" | "generating" | "result";
 
@@ -38,23 +40,44 @@ const Index = () => {
   }, [isGenerating]);
 
   const handleGenerate = async () => {
-    if (!topic.trim()) return;
+    if (!topic.trim() || !selectedType) return;
     setStep("generating");
     setIsGenerating(true);
     setGeneratedContent("");
     setStreamText("");
 
-    // Use sample content (API calls require backend proxy)
-    setTimeout(() => {
-      const sample = getSampleContent(topic);
-      setGeneratedContent(sample);
-      setStreamText(sample);
-      setProgress(100);
-      setTimeout(() => {
-        setIsGenerating(false);
-        setStep("result");
-      }, 600);
-    }, 2500);
+    let accumulated = "";
+
+    try {
+      await streamGenerate({
+        topic,
+        productType: selectedType,
+        audience,
+        lang,
+        onDelta: (chunk) => {
+          accumulated += chunk;
+          setStreamText(accumulated);
+        },
+        onDone: () => {
+          setGeneratedContent(accumulated);
+          setProgress(100);
+          setTimeout(() => {
+            setIsGenerating(false);
+            setStep("result");
+          }, 400);
+        },
+        onError: (error) => {
+          toast.error(error);
+          setIsGenerating(false);
+          setStep("form");
+        },
+      });
+    } catch (e) {
+      console.error(e);
+      toast.error("Terjadi kesalahan saat generate konten.");
+      setIsGenerating(false);
+      setStep("form");
+    }
   };
 
   const handleCopy = () => {
