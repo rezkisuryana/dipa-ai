@@ -11,72 +11,88 @@ const PDFPreview = ({ content, productType, topic }: PDFPreviewProps) => {
   const type = PRODUCT_TYPES.find(p => p.id === productType);
   const lines = content.split('\n');
 
+  // Group lines into logical sections (split on headings and hr)
+  const sections: string[][] = [];
+  let current: string[] = [];
+  for (const line of lines) {
+    if ((line.startsWith('# ') || line.startsWith('## ') || line.startsWith('### ') || line.startsWith('---')) && current.length > 0) {
+      sections.push(current);
+      current = [];
+    }
+    current.push(line);
+  }
+  if (current.length > 0) sections.push(current);
+
   const renderLine = (line: string, idx: number) => {
     if (line.startsWith('# ')) return (
-      <h1 key={idx} className="font-display text-[22px] mb-2 leading-tight" style={{ color: "#1a3a2a" }}>
+      <h1 key={idx} style={{ fontFamily: "'Cinzel', serif", fontSize: 22, marginBottom: 8, lineHeight: 1.3, color: "#1a3a2a" }}>
         {line.replace('# ', '')}
       </h1>
     );
     if (line.startsWith('## ')) return (
-      <h2 key={idx} className="font-body text-base mb-4 italic" style={{ color: "#2d5a3d" }}>
+      <h2 key={idx} style={{ fontFamily: "'Crimson Pro', serif", fontSize: 16, marginBottom: 16, fontStyle: "italic", color: "#2d5a3d" }}>
         {line.replace('## ', '')}
       </h2>
     );
     if (line.startsWith('### ')) return (
-      <h3 key={idx} className="font-display text-[13px] mt-5 mb-2 tracking-widest pb-1" style={{ color: "#1a3a2a", borderBottom: "1px solid hsl(var(--gold))" }}>
+      <h3 key={idx} style={{ fontFamily: "'Cinzel', serif", fontSize: 13, marginTop: 20, marginBottom: 8, letterSpacing: 3, paddingBottom: 4, color: "#1a3a2a", borderBottom: "1px solid #c9a84c", textTransform: "uppercase" as const }}>
         {line.replace('### ', '')}
       </h3>
     );
     if (line.startsWith('**') && line.endsWith('**')) return (
-      <p key={idx} className="font-bold text-[13px] my-1" style={{ color: "#1a3a2a" }}>
+      <p key={idx} style={{ fontWeight: "bold", fontSize: 13, margin: "4px 0", color: "#1a3a2a" }}>
         {line.replace(/\*\*/g, '')}
       </p>
     );
     if (line.startsWith('---')) return (
-      <hr key={idx} className="my-4" style={{ border: "none", borderTop: "1px solid #e8d5a0" }} />
+      <hr key={idx} style={{ border: "none", borderTop: "1px solid #e8d5a0", margin: "16px 0" }} />
     );
-    if (line.trim() === '') return <div key={idx} className="h-2" />;
+    if (line.trim() === '') return <div key={idx} style={{ height: 8 }} />;
     return (
-      <p key={idx} className="font-body text-xs leading-relaxed mb-1" style={{ color: "#2a3a30" }}>
+      <p key={idx} style={{ fontFamily: "'Crimson Pro', serif", fontSize: 12, lineHeight: 1.7, marginBottom: 4, color: "#2a3a30" }}>
         {line}
       </p>
     );
   };
 
   return (
-    <div id="pdf-preview" className="max-w-[700px] mx-auto rounded overflow-hidden" style={{ background: "#fffdf5", boxShadow: "0 0 60px rgba(0,0,0,0.3)" }}>
+    <div id="pdf-preview" style={{ maxWidth: 700, margin: "0 auto", background: "#fffdf5", borderRadius: 4, overflow: "hidden", boxShadow: "0 0 60px rgba(0,0,0,0.3)" }}>
       {/* Header */}
-      <div className="relative overflow-hidden px-10 py-8" style={{ background: "linear-gradient(135deg, hsl(var(--emerald-dark)) 0%, hsl(var(--emerald)) 50%, hsl(var(--emerald-dark)) 100%)" }}>
-        <div className="relative">
-          <div className="flex items-center gap-3 mb-3">
-            <span className="text-[28px]">{type?.icon}</span>
+      <div data-pdf-section style={{ background: "linear-gradient(135deg, #0a2618 0%, #166534 50%, #0a2618 100%)", padding: "32px 40px", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "relative" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
+            <span style={{ fontSize: 28 }}>{type?.icon}</span>
             <div>
-              <div className="text-primary text-[10px] tracking-[3px] uppercase mb-0.5">
+              <div style={{ color: "#4ade80", fontSize: 10, letterSpacing: 3, textTransform: "uppercase" as const, marginBottom: 2 }}>
                 {type?.sublabel} • Ramadhan 1447H
               </div>
-              <div className="text-foreground/40 text-[10px]">
+              <div style={{ color: "rgba(255,255,255,0.4)", fontSize: 10 }}>
                 Dibuat dengan RamadhanAI Studio × Mayar.id
               </div>
             </div>
           </div>
-          <div className="font-arabic text-primary text-sm">
+          <div style={{ fontFamily: "'Noto Naskh Arabic', serif", color: "#4ade80", fontSize: 14 }}>
             بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيم
           </div>
         </div>
       </div>
 
-      {/* Content */}
-      <div className="p-10">
-        {lines.map((line, idx) => renderLine(line, idx))}
+      {/* Content - each section is a data-pdf-section */}
+      <div style={{ padding: "40px 40px" }}>
+        {sections.map((sectionLines, sIdx) => (
+          <div key={sIdx} data-pdf-section>
+            {sectionLines.map((line, lIdx) => renderLine(line, sIdx * 1000 + lIdx))}
+          </div>
+        ))}
       </div>
 
       {/* Footer */}
-      <div className="flex justify-between items-center px-10 py-5" style={{ background: "linear-gradient(135deg, hsl(var(--emerald-dark)), hsl(var(--emerald)))" }}>
+      <div data-pdf-section style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "20px 40px", background: "linear-gradient(135deg, #0a2618, #166534)" }}>
         <div>
-          <div className="text-primary text-xs font-semibold">RamadhanAI Studio</div>
-          <div className="text-foreground/30 text-[10px]">Powered by Mayar.id</div>
+          <div style={{ color: "#4ade80", fontSize: 12, fontWeight: 600 }}>RamadhanAI Studio</div>
+          <div style={{ color: "rgba(255,255,255,0.3)", fontSize: 10 }}>Powered by Mayar.id</div>
         </div>
-        <div className="text-foreground/20 text-[10px] text-right">
+        <div style={{ color: "rgba(255,255,255,0.2)", fontSize: 10, textAlign: "right" as const }}>
           © Ramadhan 1447H<br />
           {new Date().toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })}
         </div>
