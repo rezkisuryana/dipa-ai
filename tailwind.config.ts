@@ -14,8 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ["Cinzel", "serif"],
-        body: ["Crimson Pro", "serif"],
+        display: ["Montserrat", "sans-serif"],
+        body: ["Montserrat", "sans-serif"],
         arabic: ["Noto Naskh Arabic", "serif"],
       },
       colors: {
