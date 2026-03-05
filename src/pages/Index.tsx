@@ -10,6 +10,14 @@ import { streamGenerate } from "@/lib/streamGenerate";
 
 type Step = "home" | "select" | "form" | "generating" | "result";
 
+/** Strip markdown symbols for display */
+function cleanDisplayLine(line: string): string {
+  let cleaned = line.replace(/^#{1,6}\s*/, '');
+  cleaned = cleaned.replace(/\*\*/g, '');
+  cleaned = cleaned.replace(/(?<!\*)\*(?!\*)/g, '');
+  return cleaned;
+}
+
 const Index = () => {
   const [step, setStep] = useState<Step>("home");
   const [selectedType, setSelectedType] = useState<ProductTypeId | null>(null);
@@ -91,7 +99,6 @@ const Index = () => {
 
   const handlePrint = async () => {
     setShowPDF(true);
-    // Wait for PDF preview to render
     setTimeout(async () => {
       try {
         setIsExporting(true);
@@ -141,25 +148,25 @@ const Index = () => {
         </div>
 
         {/* Badge */}
-        <div className="animate-fade-up bg-primary/10 border border-primary/30 rounded-full px-5 py-1.5 mb-6 text-primary text-[11px] tracking-[3px] uppercase">
-          ✦ Mayar Vibecoding Competition 2026 ✦
+        <div className="animate-fade-up bg-primary/10 border border-primary/30 rounded-full px-5 py-1.5 mb-6 text-primary text-[11px] tracking-[3px] uppercase font-semibold">
+          ✦ AI-Powered Islamic Content ✦
         </div>
 
         {/* Title */}
-        <h1 className="font-display text-center leading-none mb-3 animate-fade-up" style={{ fontSize: "clamp(32px, 7vw, 64px)", animationDelay: "0.1s" }}>
+        <h1 className="font-display text-center leading-none mb-3 animate-fade-up font-bold" style={{ fontSize: "clamp(32px, 7vw, 64px)", animationDelay: "0.1s" }}>
           <span className="gold-shimmer">RamadhanAI</span>
           <br />
-          <span className="text-foreground/85" style={{ fontSize: "0.75em" }}>Studio</span>
+          <span className="text-foreground/85 font-light" style={{ fontSize: "0.75em" }}>Studio</span>
         </h1>
 
-        <p className="text-muted-foreground text-center max-w-[500px] leading-relaxed mb-12 font-body animate-fade-up" style={{ fontSize: "clamp(14px, 2.5vw, 17px)", animationDelay: "0.2s" }}>
+        <p className="text-muted-foreground text-center max-w-[500px] leading-relaxed mb-12 font-body animate-fade-up font-light" style={{ fontSize: "clamp(14px, 2.5vw, 17px)", animationDelay: "0.2s" }}>
           Buat produk digital Islami siap jual dalam hitungan detik.<br />
-          AI generate → Export PDF → Upload ke Mayar → Langsung Berjualan 🚀
+          AI generate, Export PDF, langsung berjualan 🚀
         </p>
 
         {/* Feature pills */}
         <div className="flex gap-2.5 flex-wrap justify-center mb-12 animate-fade-up" style={{ animationDelay: "0.3s" }}>
-          {["🤖 AI-Powered", "📄 Export PDF", "🛍️ Siap Jual di Mayar", "⚡ 30 Detik Jadi", "🌙 Tema Ramadhan"].map(f => (
+          {["🤖 AI-Powered", "📄 Export PDF", "⚡ 30 Detik Jadi", "🌙 Tema Ramadhan"].map(f => (
             <span key={f} className="bg-foreground/5 border border-foreground/10 rounded-full px-3.5 py-1.5 text-foreground/55 text-xs">
               {f}
             </span>
@@ -172,13 +179,13 @@ const Index = () => {
         </button>
 
         <p className="text-foreground/20 text-[11px] mt-4 animate-fade-up" style={{ animationDelay: "0.5s" }}>
-          Gratis • Tanpa simpan data • Tidak perlu urus uang
+          Gratis • Tanpa simpan data
         </p>
       </div>
 
       {/* Bottom stats */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-8 text-foreground/20 text-xs text-center">
-        {["6 Jenis Produk", "AI Claude Powered", "PDF Instant"].map(s => (
+        {["6 Jenis Produk", "AI Powered", "PDF Instant"].map(s => (
           <div key={s}>
             <div className="text-primary text-lg font-bold font-display">{s.split(' ')[0]}</div>
             <div>{s.split(' ').slice(1).join(' ')}</div>
@@ -199,8 +206,8 @@ const Index = () => {
             ← Kembali
           </button>
           <div>
-            <div className="text-muted-foreground text-[11px] tracking-[2px] uppercase">Langkah 1 dari 2</div>
-            <h2 className="font-display text-[22px] text-foreground">Pilih Jenis Produk Digital</h2>
+            <div className="text-muted-foreground text-[11px] tracking-[2px] uppercase font-medium">Langkah 1 dari 2</div>
+            <h2 className="font-display text-[22px] text-foreground font-bold">Pilih Jenis Produk Digital</h2>
           </div>
         </div>
 
@@ -218,8 +225,8 @@ const Index = () => {
               }}
             >
               <div className="text-[32px] mb-3">{p.icon}</div>
-              <div className="text-foreground font-display text-[15px] mb-1">{p.label}</div>
-              <div className="text-[11px] tracking-wide uppercase mb-2.5" style={{ color: p.color }}>{p.sublabel}</div>
+              <div className="text-foreground font-display text-[15px] mb-1 font-bold">{p.label}</div>
+              <div className="text-[11px] tracking-wide uppercase mb-2.5 font-semibold" style={{ color: p.color }}>{p.sublabel}</div>
               <div className="text-muted-foreground text-xs leading-relaxed">{p.desc}</div>
               <div className="mt-3 px-2.5 py-1.5 bg-foreground/5 rounded-md text-foreground/30 text-[11px] italic">
                 Contoh: &ldquo;{p.example}&rdquo;
@@ -250,8 +257,8 @@ const Index = () => {
             ← Kembali
           </button>
           <div>
-            <div className="text-muted-foreground text-[11px] tracking-[2px] uppercase">Langkah 2 dari 2</div>
-            <h2 className="font-display text-[22px] text-foreground">{selectedProduct?.icon} Isi Detail Produk</h2>
+            <div className="text-muted-foreground text-[11px] tracking-[2px] uppercase font-medium">Langkah 2 dari 2</div>
+            <h2 className="font-display text-[22px] text-foreground font-bold">{selectedProduct?.icon} Isi Detail Produk</h2>
           </div>
         </div>
 
@@ -267,7 +274,7 @@ const Index = () => {
         <div className="bg-foreground/[0.04] backdrop-blur-xl border border-foreground/10 rounded-[20px] p-8">
           {/* Topic */}
           <div className="mb-6">
-            <label className="block text-primary text-[11px] tracking-[2px] uppercase mb-2.5">Topik / Judul Produk *</label>
+            <label className="block text-primary text-[11px] tracking-[2px] uppercase mb-2.5 font-semibold">Topik / Judul Produk *</label>
             <input
               value={topic}
               onChange={e => setTopic(e.target.value)}
@@ -278,7 +285,7 @@ const Index = () => {
 
           {/* Audience */}
           <div className="mb-6">
-            <label className="block text-primary text-[11px] tracking-[2px] uppercase mb-2.5">Target Pembaca</label>
+            <label className="block text-primary text-[11px] tracking-[2px] uppercase mb-2.5 font-semibold">Target Pembaca</label>
             <input
               value={audience}
               onChange={e => setAudience(e.target.value)}
@@ -289,13 +296,13 @@ const Index = () => {
 
           {/* Language */}
           <div className="mb-7">
-            <label className="block text-primary text-[11px] tracking-[2px] uppercase mb-2.5">Bahasa</label>
+            <label className="block text-primary text-[11px] tracking-[2px] uppercase mb-2.5 font-semibold">Bahasa</label>
             <div className="flex gap-2.5">
               {([["id", "🇮🇩 Indonesia"], ["bilingual", "🇸🇦 + Indonesia"]] as const).map(([v, l]) => (
                 <button
                   key={v}
                   onClick={() => setLang(v)}
-                  className="flex-1 py-2.5 rounded-lg text-[13px] transition-all cursor-pointer"
+                  className="flex-1 py-2.5 rounded-lg text-[13px] transition-all cursor-pointer font-medium"
                   style={{
                     background: lang === v ? "hsl(var(--gold) / 0.2)" : "rgba(255,255,255,0.04)",
                     border: `1.5px solid ${lang === v ? "hsl(var(--gold))" : "hsl(var(--border))"}`,
@@ -311,7 +318,7 @@ const Index = () => {
           {/* Price suggestion */}
           {selectedType && (
             <div className="bg-primary/[0.08] border border-primary/20 rounded-lg p-3.5 mb-7">
-              <div className="text-primary text-[11px] tracking-wide mb-2">💰 SARAN HARGA JUAL DI MAYAR</div>
+              <div className="text-primary text-[11px] tracking-wide mb-2 font-semibold">💰 SARAN HARGA JUAL</div>
               <div className="flex gap-2">
                 {PRICE_SUGGESTIONS[selectedType]?.map(p => (
                   <span key={p} className="bg-primary/15 rounded-md px-2.5 py-1 text-foreground text-xs font-semibold">{p}</span>
@@ -354,7 +361,7 @@ const Index = () => {
           <div className="absolute inset-0 flex items-center justify-center text-[40px]">🤖</div>
         </div>
 
-        <h2 className="font-display text-[26px] mb-2">
+        <h2 className="font-display text-[26px] mb-2 font-bold">
           <span className="gold-shimmer">AI Sedang Menulis...</span>
         </h2>
         <p className="text-muted-foreground mb-8 font-body text-[15px]">
@@ -379,7 +386,7 @@ const Index = () => {
           <div className="bg-foreground/[0.04] border border-foreground/[0.08] rounded-xl p-5 text-left max-h-[200px] overflow-hidden relative">
             <div className="absolute bottom-0 left-0 right-0 h-[60px]" style={{ background: "linear-gradient(transparent, hsl(150 40% 3% / 0.9))" }} />
             <p className="text-foreground/50 text-xs font-body leading-relaxed whitespace-pre-wrap break-words">
-              {streamText.slice(-400)}
+              {cleanDisplayLine(streamText.slice(-400))}
             </p>
           </div>
         )}
@@ -431,8 +438,8 @@ const Index = () => {
             <div className="flex items-center gap-3">
               <div className="rounded-lg w-10 h-10 flex items-center justify-center text-xl" style={{ background: "linear-gradient(135deg, hsl(var(--emerald)), hsl(var(--emerald-light)))" }}>✅</div>
               <div>
-                <div className="text-emerald-light text-xs tracking-wide">KONTEN BERHASIL DIBUAT</div>
-                <div className="text-foreground font-display text-base">{selectedProduct?.icon} {topic}</div>
+                <div className="text-emerald-light text-xs tracking-wide font-semibold">KONTEN BERHASIL DIBUAT</div>
+                <div className="text-foreground font-display text-base font-bold">{selectedProduct?.icon} {topic}</div>
               </div>
             </div>
             <button onClick={handleReset} className="bg-foreground/5 border border-foreground/10 rounded-lg px-4 py-2 cursor-pointer text-muted-foreground text-[13px]">
@@ -446,7 +453,6 @@ const Index = () => {
               { icon: "📄", label: "Preview & Print PDF", action: handlePrint, primary: true },
               { icon: "📋", label: copied ? "✅ Tersalin!" : "Salin Konten", action: handleCopy, primary: false },
               { icon: "💾", label: "Download .txt", action: handleExportText, primary: false },
-              { icon: "🛍️", label: "Upload ke Mayar", action: () => window.open("https://mayar.id", "_blank"), primary: false },
             ].map(btn => (
               <button
                 key={btn.label}
@@ -464,21 +470,6 @@ const Index = () => {
             ))}
           </div>
 
-          {/* Mayar tip */}
-          <div className="bg-primary/[0.08] border border-primary/25 rounded-xl p-3.5 mb-5 flex items-start gap-3">
-            <span className="text-lg">💡</span>
-            <div>
-              <div className="text-primary text-xs font-bold mb-1">CARA UPLOAD KE MAYAR</div>
-              <div className="text-muted-foreground text-xs leading-relaxed">
-                1. Print PDF → Save as PDF di browser &nbsp;•&nbsp;
-                2. Buka mayar.id → Buat Produk Digital &nbsp;•&nbsp;
-                3. Upload PDF → Isi harga {selectedType && PRICE_SUGGESTIONS[selectedType]?.[1]} &nbsp;•&nbsp;
-                4. Publish → Bagikan link ke WhatsApp & IG &nbsp;•&nbsp;
-                <span className="text-emerald-light font-bold">Kamu tidak pegang uang — Mayar yang kelola semua!</span>
-              </div>
-            </div>
-          </div>
-
           {/* Content preview */}
           <div ref={contentRef} className="bg-foreground/[0.03] border border-foreground/[0.08] rounded-2xl overflow-hidden">
             <div className="bg-foreground/[0.03] border-b border-foreground/[0.06] px-5 py-3.5 flex items-center gap-2.5">
@@ -493,12 +484,13 @@ const Index = () => {
             </div>
             <div className="p-7 max-h-[550px] overflow-auto font-body leading-relaxed">
               {generatedContent.split('\n').map((line, i) => {
-                if (line.startsWith('# ')) return <h1 key={i} className="font-display text-[22px] text-foreground mb-2">{line.replace('# ', '')}</h1>;
-                if (line.startsWith('## ')) return <h2 key={i} className="font-display text-base text-primary mb-4 italic">{line.replace('## ', '')}</h2>;
-                if (line.startsWith('### ')) return <h3 key={i} className="font-display text-[13px] text-emerald-light mt-5 mb-2 tracking-widest uppercase">{line.replace('### ', '')}</h3>;
+                const text = cleanDisplayLine(line);
+                if (line.startsWith('# ')) return <h1 key={i} className="font-display text-[22px] text-foreground mb-2 font-bold">{text}</h1>;
+                if (line.startsWith('## ')) return <h2 key={i} className="font-display text-base text-primary mb-4 font-semibold">{text}</h2>;
+                if (line.startsWith('### ')) return <h3 key={i} className="font-display text-[13px] text-emerald-light mt-5 mb-2 tracking-widest uppercase font-bold">{text}</h3>;
                 if (line.startsWith('---')) return <hr key={i} className="border-foreground/[0.08] my-4" />;
                 if (line.trim() === '') return <div key={i} className="h-2" />;
-                return <p key={i} className="text-foreground/65 text-sm mb-1">{line}</p>;
+                return <p key={i} className="text-foreground/65 text-sm mb-1">{text}</p>;
               })}
             </div>
           </div>
