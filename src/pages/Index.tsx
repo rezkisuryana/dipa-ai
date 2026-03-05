@@ -1,10 +1,11 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { toast } from "sonner";
 import StarsField from "@/components/StarsField";
 import IslamicPattern from "@/components/IslamicPattern";
 import PDFPreview from "@/components/PDFPreview";
 import { PRODUCT_TYPES, PRICE_SUGGESTIONS } from "@/lib/constants";
 import type { ProductTypeId } from "@/lib/constants";
+import { exportPDF } from "@/lib/exportPDF";
 import { streamGenerate } from "@/lib/streamGenerate";
 
 type Step = "home" | "select" | "form" | "generating" | "result";
@@ -86,9 +87,24 @@ const Index = () => {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handlePrint = () => {
+  const [isExporting, setIsExporting] = useState(false);
+
+  const handlePrint = async () => {
     setShowPDF(true);
-    setTimeout(() => window.print(), 500);
+    // Wait for PDF preview to render
+    setTimeout(async () => {
+      try {
+        setIsExporting(true);
+        const filename = `${topic.replace(/\s+/g, "-").toLowerCase()}-ramadhan.pdf`;
+        await exportPDF(filename);
+        toast.success("PDF berhasil diunduh!");
+      } catch (e) {
+        console.error(e);
+        toast.error("Gagal mengexport PDF. Coba lagi.");
+      } finally {
+        setIsExporting(false);
+      }
+    }, 800);
   };
 
   const handleExportText = () => {
@@ -380,8 +396,25 @@ const Index = () => {
             <button onClick={() => { setShowPDF(false); }} className="bg-foreground/10 border border-foreground/20 rounded-lg px-5 py-2 cursor-pointer text-foreground text-[13px] mr-3">
               ✕ Tutup Preview
             </button>
-            <button onClick={() => window.print()} className="border-none rounded-lg px-5 py-2 cursor-pointer text-foreground text-[13px] font-bold" style={{ background: "linear-gradient(135deg, hsl(var(--emerald)), hsl(var(--gold)))" }}>
-              🖨️ Print / Save PDF
+            <button
+              disabled={isExporting}
+              onClick={async () => {
+                try {
+                  setIsExporting(true);
+                  const filename = `${topic.replace(/\s+/g, "-").toLowerCase()}-ramadhan.pdf`;
+                  await exportPDF(filename);
+                  toast.success("PDF berhasil diunduh!");
+                } catch (e) {
+                  console.error(e);
+                  toast.error("Gagal mengexport PDF.");
+                } finally {
+                  setIsExporting(false);
+                }
+              }}
+              className="border-none rounded-lg px-5 py-2 cursor-pointer text-foreground text-[13px] font-bold"
+              style={{ background: "linear-gradient(135deg, hsl(var(--emerald)), hsl(var(--gold)))" }}
+            >
+              {isExporting ? "⏳ Mengexport..." : "📄 Download PDF"}
             </button>
           </div>
           {selectedType && <PDFPreview content={generatedContent} productType={selectedType} topic={topic} />}
