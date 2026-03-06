@@ -89,7 +89,7 @@ const PDFPreview = ({ content, productType, topic }: PDFPreviewProps) => {
                 {type?.sublabel} • Ramadhan 1447H
               </div>
               <div style={{ fontFamily: "'Montserrat', sans-serif", color: "rgba(255,255,255,0.4)", fontSize: 10 }}>
-                RamadhanAI Studio
+                RAIA
               </div>
             </div>
           </div>
@@ -111,7 +111,7 @@ const PDFPreview = ({ content, productType, topic }: PDFPreviewProps) => {
       {/* Footer */}
       <div data-pdf-section style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "20px 40px", background: "linear-gradient(135deg, #0a2618, #166534)" }}>
         <div>
-          <div style={{ fontFamily: "'Montserrat', sans-serif", color: "#4ade80", fontSize: 12, fontWeight: 600 }}>RamadhanAI Studio</div>
+          <div style={{ fontFamily: "'Montserrat', sans-serif", color: "#4ade80", fontSize: 12, fontWeight: 600 }}>RAIA</div>
         </div>
         <div style={{ fontFamily: "'Montserrat', sans-serif", color: "rgba(255,255,255,0.2)", fontSize: 10, textAlign: "right" as const }}>
           © Ramadhan 1447H<br />

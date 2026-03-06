@@ -154,9 +154,7 @@ const Index = () => {
 
         {/* Title */}
         <h1 className="font-display text-center leading-none mb-3 animate-fade-up font-bold" style={{ fontSize: "clamp(32px, 7vw, 64px)", animationDelay: "0.1s" }}>
-          <span className="gold-shimmer">RamadhanAI</span>
-          <br />
-          <span className="text-foreground/85 font-light" style={{ fontSize: "0.75em" }}>Studio</span>
+          <span className="gold-shimmer">RAIA</span>
         </h1>
 
         <p className="text-muted-foreground text-center max-w-[500px] leading-relaxed mb-12 font-body animate-fade-up font-light" style={{ fontSize: "clamp(14px, 2.5vw, 17px)", animationDelay: "0.2s" }}>
