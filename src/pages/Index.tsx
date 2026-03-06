@@ -123,6 +123,48 @@ const Index = () => {
     a.click();
   };
 
+  const handleShareWhatsApp = () => {
+    const productName = selectedProduct?.label || "Produk Digital";
+    const promoText = `🌙 *${topic}* — ${productName} Islami\n\nProduk digital berkualitas tinggi untuk Ramadhan 1447H.\nDibuat dengan AI, siap digunakan!\n\n✨ Cek di sini: ${window.location.origin}\n\n#Ramadhan #ProdukDigital #RAIA`;
+    const waUrl = `https://wa.me/?text=${encodeURIComponent(promoText)}`;
+    window.open(waUrl, "_blank");
+  };
+
+  const [isMayarLoading, setIsMayarLoading] = useState(false);
+
+  const handleUploadMayar = async () => {
+    setIsMayarLoading(true);
+    try {
+      const { data, error } = await import("@/integrations/supabase/client").then(m =>
+        m.supabase.functions.invoke("upload-mayar", {
+          body: {
+            topic,
+            productType: selectedType,
+            content: generatedContent,
+            productLabel: selectedProduct?.label,
+          },
+        })
+      );
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+      if (data?.link) {
+        window.open(data.link, "_blank");
+        toast.success("Produk berhasil dibuat di Mayar!");
+      } else {
+        toast.success("Produk berhasil diupload ke Mayar!");
+      }
+    } catch (e: any) {
+      console.error(e);
+      if (e?.message?.includes("API key")) {
+        toast.error("API Key Mayar belum dikonfigurasi. Hubungi admin.");
+      } else {
+        toast.error("Gagal upload ke Mayar: " + (e?.message || "Unknown error"));
+      }
+    } finally {
+      setIsMayarLoading(false);
+    }
+  };
+
   const handleReset = () => {
     setStep("home");
     setSelectedType(null);
@@ -446,16 +488,19 @@ const Index = () => {
           </div>
 
           {/* Actions */}
-          <div className="grid gap-2.5 mb-6" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))" }}>
+          <div className="grid gap-2.5 mb-6" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))" }}>
             {[
               { icon: "📄", label: "Preview & Print PDF", action: handlePrint, primary: true },
+              { icon: "🚀", label: isMayarLoading ? "⏳ Uploading..." : "Upload ke Mayar", action: handleUploadMayar, primary: false, disabled: isMayarLoading },
+              { icon: "📱", label: "Share ke WhatsApp", action: handleShareWhatsApp, primary: false },
               { icon: "📋", label: copied ? "✅ Tersalin!" : "Salin Konten", action: handleCopy, primary: false },
               { icon: "💾", label: "Download .txt", action: handleExportText, primary: false },
             ].map(btn => (
               <button
                 key={btn.label}
                 onClick={btn.action}
-                className="btn-glow py-3 px-4 rounded-lg cursor-pointer text-[13px] font-semibold flex items-center justify-center gap-1.5"
+                disabled={'disabled' in btn ? btn.disabled : false}
+                className="btn-glow py-3 px-4 rounded-lg cursor-pointer text-[13px] font-semibold flex items-center justify-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{
                   background: btn.primary ? "linear-gradient(135deg, hsl(var(--emerald)), hsl(var(--emerald-light)), hsl(var(--gold)))" : "hsl(var(--muted))",
                   border: btn.primary ? "none" : "1px solid hsl(var(--border))",
