@@ -151,7 +151,7 @@ const Index = () => {
 
       // 3. Buka dashboard Lynk.id di tab baru (login dulu lalu klik "Tambah Produk")
       setTimeout(() => {
-        window.open("https://app.lynk.id/", "_blank");
+        window.open("https://lynk.id/admin/digital-product", "_blank");
       }, 600);
     } catch (e: any) {
       console.error(e);
