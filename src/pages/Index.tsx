@@ -130,41 +130,32 @@ const Index = () => {
     window.open(waUrl, "_blank");
   };
 
-  const [isMayarLoading, setIsMayarLoading] = useState(false);
+  const handleUploadLynk = async () => {
+    const productName = selectedProduct?.label || "Produk Digital";
+    const description = `${topic} — ${productName} Islami\n\nProduk digital berkualitas tinggi untuk Ramadhan 1447H. Dibuat dengan AI RAIA.\n\n--- ISI PRODUK ---\n\n${generatedContent}`;
 
-  const handleUploadMayar = async () => {
-    setIsMayarLoading(true);
     try {
-      const { data, error } = await import("@/integrations/supabase/client").then(m =>
-        m.supabase.functions.invoke("upload-mayar", {
-          body: {
-            topic,
-            productType: selectedType,
-            content: generatedContent,
-            productLabel: selectedProduct?.label,
-          },
-        })
-      );
-      if (error) throw error;
-      if (data?.error) throw new Error(data.error);
-      if (data?.success === false) throw new Error(data.error || "Integrasi Mayar tidak tersedia.");
-      if (data?.link) {
-        window.open(data.link, "_blank");
-        toast.success("Produk berhasil dibuat di Mayar!");
-      } else {
-        toast.success("Produk berhasil diupload ke Mayar!");
-      }
+      // 1. Copy konten lengkap (judul + deskripsi + isi) ke clipboard
+      await navigator.clipboard.writeText(description);
+
+      // 2. Download .txt sebagai file produk siap upload
+      const blob = new Blob([generatedContent], { type: "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${topic.replace(/\s+/g, "-").toLowerCase()}-ramadhan.txt`;
+      a.click();
+      URL.revokeObjectURL(url);
+
+      toast.success("Konten tersalin & file diunduh! Membuka Lynk.id...");
+
+      // 3. Buka dashboard Lynk.id new product di tab baru
+      setTimeout(() => {
+        window.open("https://lynk.id/dashboard/product/new", "_blank");
+      }, 600);
     } catch (e: any) {
       console.error(e);
-      if (e?.message?.includes("API key")) {
-        toast.error("API Key Mayar belum dikonfigurasi. Hubungi admin.");
-      } else if (e?.message?.includes("endpoint") || e?.message?.includes("404") || e?.message?.includes("dinonaktifkan")) {
-        toast.error("Integrasi otomatis Mayar belum didukung oleh endpoint API Mayar saat ini.");
-      } else {
-        toast.error("Gagal upload ke Mayar: " + (e?.message || "Unknown error"));
-      }
-    } finally {
-      setIsMayarLoading(false);
+      toast.error("Gagal menyiapkan konten Lynk.id: " + (e?.message || "Unknown error"));
     }
   };
 
