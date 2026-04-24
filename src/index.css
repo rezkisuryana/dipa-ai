@@ -2,55 +2,66 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Noto+Naskh+Arabic:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 @layer base {
   :root {
-    --background: 150 40% 4%;
-    --foreground: 40 30% 90%;
+    /* Modern dark theme — deep slate background with violet/cyan accents */
+    --background: 230 25% 6%;
+    --foreground: 220 15% 96%;
 
-    --card: 150 30% 6%;
-    --card-foreground: 40 30% 90%;
+    --card: 230 22% 9%;
+    --card-foreground: 220 15% 96%;
 
-    --popover: 150 30% 6%;
-    --popover-foreground: 40 30% 90%;
+    --popover: 230 22% 9%;
+    --popover-foreground: 220 15% 96%;
 
-    --primary: 40 45% 55%;
-    --primary-foreground: 150 40% 6%;
+    /* Primary = bright violet */
+    --primary: 262 83% 65%;
+    --primary-foreground: 230 25% 6%;
 
-    --secondary: 152 35% 25%;
-    --secondary-foreground: 40 30% 90%;
+    /* Secondary = electric cyan */
+    --secondary: 190 95% 55%;
+    --secondary-foreground: 230 25% 6%;
 
-    --muted: 150 20% 12%;
-    --muted-foreground: 150 10% 50%;
+    --muted: 230 18% 14%;
+    --muted-foreground: 220 10% 60%;
 
-    --accent: 152 35% 30%;
-    --accent-foreground: 40 30% 90%;
+    --accent: 280 70% 60%;
+    --accent-foreground: 220 15% 96%;
 
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 150 15% 15%;
-    --input: 150 15% 15%;
-    --ring: 40 45% 55%;
+    --border: 230 18% 16%;
+    --input: 230 18% 14%;
+    --ring: 262 83% 65%;
 
-    --radius: 0.75rem;
+    --radius: 0.875rem;
 
-    --gold: 40 50% 57%;
-    --gold-light: 42 70% 75%;
-    --gold-dark: 38 40% 42%;
-    --emerald: 152 40% 35%;
-    --emerald-light: 152 50% 60%;
-    --emerald-dark: 150 45% 15%;
+    /* Brand tokens */
+    --violet: 262 83% 65%;
+    --violet-light: 268 90% 78%;
+    --violet-dark: 258 70% 45%;
+    --cyan: 190 95% 55%;
+    --cyan-light: 188 95% 70%;
+    --cyan-dark: 195 80% 38%;
+    --pink: 320 85% 65%;
 
-    --sidebar-background: 150 30% 6%;
-    --sidebar-foreground: 40 30% 90%;
-    --sidebar-primary: 40 45% 55%;
-    --sidebar-primary-foreground: 150 40% 6%;
-    --sidebar-accent: 150 20% 12%;
-    --sidebar-accent-foreground: 40 30% 90%;
-    --sidebar-border: 150 15% 15%;
-    --sidebar-ring: 40 45% 55%;
+    /* Gradients */
+    --gradient-brand: linear-gradient(135deg, hsl(262 83% 65%), hsl(280 75% 60%), hsl(190 95% 55%));
+    --gradient-hero: linear-gradient(160deg, hsl(230 28% 5%) 0%, hsl(258 35% 10%) 50%, hsl(230 28% 5%) 100%);
+    --shadow-brand: 0 20px 60px -10px hsl(262 83% 65% / 0.4);
+    --shadow-glow: 0 0 50px hsl(262 83% 65% / 0.3);
+
+    --sidebar-background: 230 22% 9%;
+    --sidebar-foreground: 220 15% 96%;
+    --sidebar-primary: 262 83% 65%;
+    --sidebar-primary-foreground: 230 25% 6%;
+    --sidebar-accent: 230 18% 14%;
+    --sidebar-accent-foreground: 220 15% 96%;
+    --sidebar-border: 230 18% 16%;
+    --sidebar-ring: 262 83% 65%;
   }
 }
 
@@ -61,7 +72,7 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Inter', sans-serif;
   }
 }
 
@@ -91,15 +102,19 @@
   0%, 100% { opacity: 0.2; transform: scale(1); }
   50%      { opacity: 1;   transform: scale(1.4); }
 }
+@keyframes gradient-flow {
+  0%, 100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
 
-/* Utility classes */
-.gold-shimmer {
-  background: linear-gradient(90deg, hsl(var(--gold-dark)), hsl(var(--gold-light)), hsl(var(--gold)), hsl(var(--gold-dark)), hsl(var(--gold-light)));
+/* Brand text gradient */
+.brand-gradient {
+  background: linear-gradient(90deg, hsl(var(--violet-light)), hsl(var(--cyan-light)), hsl(var(--violet-light)));
   background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: shimmer 3s linear infinite;
+  animation: shimmer 4s linear infinite;
 }
 
 .animate-fade-up {
@@ -132,14 +147,14 @@
 .btn-glow::after {
   content: '';
   @apply absolute inset-0;
-  background: linear-gradient(90deg, transparent, rgba(255,255,200,0.15), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
   transform: translateX(-100%);
   transition: transform 0.4s ease;
 }
 .btn-glow:hover::after { transform: translateX(100%); }
 .btn-glow:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 40px hsl(var(--gold) / 0.3);
+  box-shadow: 0 12px 40px hsl(var(--violet) / 0.4);
 }
 
 .card-hover {
@@ -147,13 +162,13 @@
 }
 .card-hover:hover {
   transform: translateY(-4px);
-  box-shadow: 0 20px 60px hsl(var(--gold) / 0.18);
+  box-shadow: 0 20px 60px hsl(var(--violet) / 0.2);
 }
 
 /* Scrollbar */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: hsl(var(--background)); }
-::-webkit-scrollbar-thumb { background: hsl(var(--emerald)); border-radius: 3px; }
+::-webkit-scrollbar-thumb { background: hsl(var(--violet) / 0.5); border-radius: 3px; }
 
 /* Print */
 @media print {
@@ -164,11 +179,8 @@
 
 /* Font families */
 .font-display {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Space Grotesk', sans-serif;
 }
 .font-body {
-  font-family: 'Montserrat', sans-serif;
-}
-.font-arabic {
-  font-family: 'Noto Naskh Arabic', serif;
+  font-family: 'Inter', sans-serif;
 }

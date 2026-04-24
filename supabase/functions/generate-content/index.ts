@@ -8,17 +8,17 @@ const corsHeaders = {
 
 const PRODUCT_PROMPTS: Record<string, string> = {
   ebook:
-    "Buat e-book digital Islami bertema Ramadhan. Sertakan BAB-BAB yang terstruktur, pendahuluan, isi lengkap per bab, dalil Al-Quran dan Hadits yang relevan, serta penutup. Gunakan format markdown dengan heading (#, ##, ###).",
+    "Buat e-book digital profesional yang siap dijual. Sertakan daftar isi, pendahuluan, BAB-BAB terstruktur dengan sub-bagian, contoh nyata/case study, actionable tips di setiap bab, dan penutup yang inspiratif. Gunakan format markdown (#, ##, ###).",
   checklist:
-    "Buat checklist/tracker amalan harian 30 hari Ramadhan. Sertakan amalan wajib dan sunnah, target tilawah, sedekah, dan ibadah lainnya. Format sebagai daftar terstruktur dengan markdown.",
+    "Buat checklist actionable yang detail dan siap pakai. Bagi menjadi beberapa kategori/fase logis, sertakan deskripsi singkat untuk setiap item, prioritas, dan tips praktis. Format markdown dengan checkbox-style list.",
   planner:
-    "Buat planner/jadwal Ramadhan yang detail. Sertakan jadwal sahur, iftar, sholat, tadarus, dan aktivitas produktif. Buat per minggu dengan tips dan motivasi. Format markdown.",
-  resep:
-    "Buat kumpulan resep masakan untuk sahur dan buka puasa Ramadhan. Sertakan bahan, langkah memasak, tips nutrisi, dan variasi menu. Format markdown yang rapi.",
-  doa:
-    "Buat panduan doa, dzikir, dan wirid untuk bulan Ramadhan. Sertakan teks Arab, transliterasi latin, terjemahan Indonesia, dan keutamaan setiap doa. Format markdown.",
-  kelas:
-    "Buat outline dan materi mini e-course/kelas online bertema Ramadhan. Sertakan modul-modul, learning objectives, materi per sesi, dan tugas/refleksi. Format markdown.",
+    "Buat planner/perencana yang detail dan terstruktur (mingguan atau bulanan). Sertakan goal-setting framework, breakdown harian, target measurable, ruang refleksi, dan tips konsistensi. Format markdown rapi.",
+  template:
+    "Buat kumpulan template siap pakai yang berkualitas. Sertakan minimal 5-10 variasi template dengan placeholder yang jelas, instruksi penggunaan, contoh hasil akhir, dan best practices. Format markdown.",
+  guide:
+    "Buat panduan step-by-step yang lengkap dan mudah diikuti. Mulai dari basics hingga advanced, sertakan contoh nyata, common mistakes to avoid, troubleshooting tips, dan resource tambahan. Format markdown.",
+  course:
+    "Buat outline dan materi mini course/kelas online yang profesional. Sertakan learning objectives, modul-modul terstruktur, materi inti per sesi, latihan/tugas praktis, dan rubrik refleksi. Format markdown.",
 };
 
 serve(async (req) => {
@@ -36,24 +36,24 @@ serve(async (req) => {
 
     const productPrompt = PRODUCT_PROMPTS[productType] || PRODUCT_PROMPTS.ebook;
     const langInstruction =
-      lang === "bilingual"
-        ? "Tulis dalam bahasa Indonesia dengan menyertakan teks Arab untuk doa/ayat beserta transliterasi latin."
-        : "Tulis sepenuhnya dalam bahasa Indonesia.";
+      lang === "en"
+        ? "Write the content fully in clear, professional English."
+        : "Tulis konten sepenuhnya dalam bahasa Indonesia yang jelas dan profesional.";
     const audienceInstruction = audience
-      ? `Target pembaca: ${audience}.`
+      ? `Target pembaca / audiens: ${audience}.`
       : "";
 
-    const systemPrompt = `Kamu adalah penulis konten Islami profesional yang ahli dalam tema Ramadhan. 
-Tugas kamu: ${productPrompt}
+    const systemPrompt = `Kamu adalah copywriter & content strategist profesional yang ahli membuat produk digital siap jual (e-book, planner, template, course, dll).
+Tugasmu: ${productPrompt}
 
 Aturan penting:
 - ${langInstruction}
 - ${audienceInstruction}
 - Gunakan format Markdown: # untuk judul utama, ## untuk sub-judul, ### untuk bagian, --- untuk pemisah.
-- Konten harus berkualitas tinggi, informatif, dan siap dijual sebagai produk digital.
-- Sertakan dalil dari Al-Quran dan Hadits yang relevan.
-- Minimal 1500 kata, konten harus substansial dan bernilai.
-- Akhiri dengan penutup yang inspiratif dan doa.`;
+- Konten harus berkualitas tinggi, actionable, dan benar-benar bernilai sebagai produk digital berbayar.
+- Sertakan contoh nyata, framework, atau tips praktis yang langsung bisa diterapkan.
+- Minimal 1500 kata, konten harus substansial.
+- Akhiri dengan ringkasan dan call-to-action yang memotivasi.`;
 
     const response = await fetch(
       "https://ai.gateway.lovable.dev/v1/chat/completions",

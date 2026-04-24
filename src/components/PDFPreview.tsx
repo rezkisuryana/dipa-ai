@@ -7,16 +7,10 @@ interface PDFPreviewProps {
   topic: string;
 }
 
-/** Strip markdown symbols: #, **, *, ---, etc. */
 function cleanLine(line: string): string {
-  // Remove heading markers
   let cleaned = line.replace(/^#{1,6}\s*/, '');
-  // Remove bold markers
   cleaned = cleaned.replace(/\*\*/g, '');
-  // Remove italic markers (single *)
   cleaned = cleaned.replace(/(?<!\*)\*(?!\*)/g, '');
-  // Remove leading list markers like "1. " or "- "
-  // Keep the text after
   cleaned = cleaned.replace(/^\d+\.\s+/, '');
   cleaned = cleaned.replace(/^[-•]\s+/, '');
   return cleaned;
@@ -48,53 +42,53 @@ const PDFPreview = ({ content, productType, topic }: PDFPreviewProps) => {
     if (!text && !isHR(line)) return <div key={idx} style={{ height: 10 }} />;
 
     if (isHeading1(line)) return (
-      <h1 key={idx} style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 22, fontWeight: 700, marginBottom: 10, lineHeight: 1.4, color: "#1a3a2a" }}>
+      <h1 key={idx} style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: 24, fontWeight: 700, marginBottom: 12, lineHeight: 1.3, color: "#1e1b4b" }}>
         {text}
       </h1>
     );
     if (isHeading2(line)) return (
-      <h2 key={idx} style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 16, fontWeight: 600, marginBottom: 14, color: "#2d5a3d" }}>
+      <h2 key={idx} style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: 17, fontWeight: 600, marginBottom: 14, color: "#6d28d9" }}>
         {text}
       </h2>
     );
     if (isHeading3(line)) return (
-      <h3 key={idx} style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 13, fontWeight: 700, marginTop: 22, marginBottom: 10, letterSpacing: 2, paddingBottom: 5, color: "#1a3a2a", borderBottom: "1px solid #c9a84c", textTransform: "uppercase" as const }}>
+      <h3 key={idx} style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: 12, fontWeight: 700, marginTop: 22, marginBottom: 10, letterSpacing: 2, paddingBottom: 5, color: "#1e1b4b", borderBottom: "1.5px solid #06b6d4", textTransform: "uppercase" as const }}>
         {text}
       </h3>
     );
     if (isBold(line)) return (
-      <p key={idx} style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 600, fontSize: 13, margin: "6px 0", color: "#1a3a2a" }}>
+      <p key={idx} style={{ fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: 13, margin: "6px 0", color: "#1e1b4b" }}>
         {text}
       </p>
     );
     if (isHR(line)) return (
-      <hr key={idx} style={{ border: "none", borderTop: "1px solid #e8d5a0", margin: "18px 0" }} />
+      <hr key={idx} style={{ border: "none", borderTop: "1px solid #e9d5ff", margin: "18px 0" }} />
     );
     return (
-      <p key={idx} style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 11.5, lineHeight: 1.85, marginBottom: 6, color: "#2a3a30" }}>
+      <p key={idx} style={{ fontFamily: "'Inter', sans-serif", fontSize: 11.5, lineHeight: 1.85, marginBottom: 6, color: "#27272a" }}>
         {text}
       </p>
     );
   };
 
   return (
-    <div id="pdf-preview" style={{ maxWidth: 700, margin: "0 auto", background: "#fffdf5", borderRadius: 4, overflow: "hidden", boxShadow: "0 0 60px rgba(0,0,0,0.3)" }}>
+    <div id="pdf-preview" style={{ maxWidth: 700, margin: "0 auto", background: "#ffffff", borderRadius: 4, overflow: "hidden", boxShadow: "0 0 60px rgba(0,0,0,0.3)" }}>
       {/* Header */}
-      <div data-pdf-section style={{ background: "linear-gradient(135deg, #0a2618 0%, #166534 50%, #0a2618 100%)", padding: "32px 40px", position: "relative", overflow: "hidden" }}>
+      <div data-pdf-section style={{ background: "linear-gradient(135deg, #1e1b4b 0%, #6d28d9 50%, #06b6d4 100%)", padding: "32px 40px", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "relative" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
             <span style={{ fontSize: 28 }}>{type?.icon}</span>
             <div>
-              <div style={{ fontFamily: "'Montserrat', sans-serif", color: "#4ade80", fontSize: 10, letterSpacing: 3, textTransform: "uppercase" as const, marginBottom: 2, fontWeight: 600 }}>
-                {type?.sublabel} • Ramadhan 1447H
+              <div style={{ fontFamily: "'Space Grotesk', sans-serif", color: "#a5f3fc", fontSize: 10, letterSpacing: 3, textTransform: "uppercase" as const, marginBottom: 2, fontWeight: 600 }}>
+                {type?.sublabel} • Digital Product
               </div>
-              <div style={{ fontFamily: "'Montserrat', sans-serif", color: "rgba(255,255,255,0.4)", fontSize: 10 }}>
-                RAIA
+              <div style={{ fontFamily: "'Space Grotesk', sans-serif", color: "rgba(255,255,255,0.5)", fontSize: 10, fontWeight: 600, letterSpacing: 1 }}>
+                PRODUKLY
               </div>
             </div>
           </div>
-          <div style={{ fontFamily: "'Noto Naskh Arabic', serif", color: "#4ade80", fontSize: 14 }}>
-            بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيم
+          <div style={{ fontFamily: "'Space Grotesk', sans-serif", color: "#ffffff", fontSize: 22, fontWeight: 700, marginTop: 8 }}>
+            {topic}
           </div>
         </div>
       </div>
@@ -109,12 +103,12 @@ const PDFPreview = ({ content, productType, topic }: PDFPreviewProps) => {
       </div>
 
       {/* Footer */}
-      <div data-pdf-section style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "20px 40px", background: "linear-gradient(135deg, #0a2618, #166534)" }}>
+      <div data-pdf-section style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "20px 40px", background: "linear-gradient(135deg, #1e1b4b, #6d28d9)" }}>
         <div>
-          <div style={{ fontFamily: "'Montserrat', sans-serif", color: "#4ade80", fontSize: 12, fontWeight: 600 }}>RAIA</div>
+          <div style={{ fontFamily: "'Space Grotesk', sans-serif", color: "#a5f3fc", fontSize: 12, fontWeight: 700, letterSpacing: 1 }}>PRODUKLY</div>
         </div>
-        <div style={{ fontFamily: "'Montserrat', sans-serif", color: "rgba(255,255,255,0.2)", fontSize: 10, textAlign: "right" as const }}>
-          © Ramadhan 1447H<br />
+        <div style={{ fontFamily: "'Inter', sans-serif", color: "rgba(255,255,255,0.4)", fontSize: 10, textAlign: "right" as const }}>
+          Made with AI<br />
           {new Date().toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })}
         </div>
       </div>
