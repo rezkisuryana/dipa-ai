@@ -6,6 +6,12 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+const json = (body: Record<string, unknown>, status = 200) =>
+  new Response(JSON.stringify(body), {
+    status,
+    headers: { ...corsHeaders, "Content-Type": "application/json" },
+  });
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -14,91 +20,39 @@ serve(async (req) => {
   try {
     const MAYAR_API_KEY = Deno.env.get("MAYAR_API_KEY");
     if (!MAYAR_API_KEY) {
-      return new Response(
-        JSON.stringify({ error: "API key Mayar belum dikonfigurasi." }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return json({ success: false, error: "API key Mayar belum dikonfigurasi." });
     }
 
-    const { topic, productType, content, productLabel } = await req.json();
+    const { topic, content, productLabel } = await req.json();
+    const safeTopic = typeof topic === "string" ? topic.trim() : "";
+    const safeContent = typeof content === "string" ? content.trim() : "";
+    const safeLabel = typeof productLabel === "string" && productLabel.trim()
+      ? productLabel.trim()
+      : "Produk Digital Islami";
 
-    if (!topic || !content) {
-      return new Response(
-        JSON.stringify({ error: "Topic dan content wajib diisi." }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+    if (!safeTopic || !safeContent) {
+      return json({ success: false, error: "Topic dan content wajib diisi." });
     }
 
-    const mayarBaseUrl = "https://api.mayar.id/hl/v1";
-
-    // Step 1: Upload the file to Mayar
-    const fileName = `${topic.replace(/\s+/g, "-").toLowerCase()}-ramadhan.txt`;
-    const fileBlob = new Blob([content], { type: "text/plain" });
-
-    const uploadForm = new FormData();
-    uploadForm.append("file", fileBlob, fileName);
-
-    const uploadRes = await fetch(`${mayarBaseUrl}/file`, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${MAYAR_API_KEY}` },
-      body: uploadForm,
-    });
-
-    const uploadJson = await uploadRes.json();
-    if (!uploadRes.ok) {
-      console.error("Mayar upload error:", uploadRes.status, JSON.stringify(uploadJson));
-      return new Response(
-        JSON.stringify({ error: uploadJson?.messages || "Gagal upload file ke Mayar." }),
-        { status: uploadRes.status, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-
-    const fileId = uploadJson?.data?.id || uploadJson?.id;
-    const fileUrl = uploadJson?.data?.url || uploadJson?.url;
-
-    // Step 2: Create the digital product
-    const productPayload = {
-      name: `${topic} — ${productLabel || "Produk Digital Islami"}`,
-      type: "digital_product",
-      description: `Produk digital Islami bertema Ramadhan: ${topic}. Dibuat dengan RAIA.`,
-      amount: 0,
-      multipleFiles: fileId
-        ? [{ id: fileId, url: fileUrl, name: fileName }]
-        : undefined,
-    };
-
-    const createRes = await fetch(`${mayarBaseUrl}/product`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${MAYAR_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(productPayload),
-    });
-
-    const createJson = await createRes.json();
-    if (!createRes.ok) {
-      console.error("Mayar create product error:", createRes.status, JSON.stringify(createJson));
-      return new Response(
-        JSON.stringify({ error: createJson?.messages || "Gagal membuat produk di Mayar." }),
-        { status: createRes.status, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-
-    return new Response(
-      JSON.stringify({
-        success: true,
-        link: createJson?.data?.link || createJson?.link || null,
-        productId: createJson?.data?.id || createJson?.id || null,
-        message: "Produk berhasil dibuat di Mayar!",
-      }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    console.warn(
+      "upload-mayar disabled: documented Mayar API does not expose create-product or file-upload endpoints for this flow",
+      JSON.stringify({ topic: safeTopic, productLabel: safeLabel })
     );
+
+    return json({
+      success: false,
+      error:
+        "Integrasi otomatis ke Mayar dinonaktifkan karena endpoint yang dipakai sebelumnya (`POST /file` dan `POST /product`) tidak tersedia di API Mayar dan selalu mengembalikan 404.",
+      details:
+        "Dokumentasi publik Mayar saat ini hanya menampilkan endpoint produk untuk baca data, serta endpoint pembayaran/invoice untuk checkout.",
+      nextStep:
+        "Gunakan pembuatan produk manual di dashboard Mayar, atau ganti ke alur pembayaran lain yang punya endpoint create resmi.",
+    });
   } catch (e) {
     console.error("upload-mayar error:", e);
-    return new Response(
-      JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    return json(
+      { success: false, error: e instanceof Error ? e.message : "Unknown error" },
+      500,
     );
   }
 });
