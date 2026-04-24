@@ -485,7 +485,7 @@ const Index = () => {
           <div className="grid gap-2.5 mb-6" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))" }}>
             {[
               { icon: "📄", label: "Preview & Print PDF", action: handlePrint, primary: true },
-              { icon: "🚀", label: isMayarLoading ? "⏳ Uploading..." : "Upload ke Mayar", action: handleUploadMayar, primary: false, disabled: isMayarLoading },
+              { icon: "🚀", label: "Upload ke Lynk.id", action: handleUploadLynk, primary: false },
               { icon: "📱", label: "Share ke WhatsApp", action: handleShareWhatsApp, primary: false },
               { icon: "📋", label: copied ? "✅ Tersalin!" : "Salin Konten", action: handleCopy, primary: false },
               { icon: "💾", label: "Download .txt", action: handleExportText, primary: false },
