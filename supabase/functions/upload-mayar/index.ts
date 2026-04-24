@@ -29,46 +29,67 @@ serve(async (req) => {
       );
     }
 
-    // Create a text file blob from the content
-    const fileName = `${topic.replace(/\s+/g, "-").toLowerCase()}-ramadhan.txt`;
-    
-    // Use Mayar API to create a digital product
-    // First, create the product using multipart form data
-    const formData = new FormData();
-    formData.append("name", `${topic} — ${productLabel || "Produk Digital Islami"}`);
-    formData.append("description", `Produk digital Islami bertema Ramadhan: ${topic}. Dibuat dengan RAIA.`);
-    formData.append("amount", "0"); // Free by default, user can change on Mayar dashboard
-    formData.append("paymentType", "free");
-    
-    // Upload the content as a file
-    const fileBlob = new Blob([content], { type: "text/plain" });
-    formData.append("file", fileBlob, fileName);
-
     const mayarBaseUrl = "https://api.mayar.id/hl/v1";
 
-    const response = await fetch(`${mayarBaseUrl}/product/create`, {
+    // Step 1: Upload the file to Mayar
+    const fileName = `${topic.replace(/\s+/g, "-").toLowerCase()}-ramadhan.txt`;
+    const fileBlob = new Blob([content], { type: "text/plain" });
+
+    const uploadForm = new FormData();
+    uploadForm.append("file", fileBlob, fileName);
+
+    const uploadRes = await fetch(`${mayarBaseUrl}/file`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${MAYAR_API_KEY}` },
+      body: uploadForm,
+    });
+
+    const uploadJson = await uploadRes.json();
+    if (!uploadRes.ok) {
+      console.error("Mayar upload error:", uploadRes.status, JSON.stringify(uploadJson));
+      return new Response(
+        JSON.stringify({ error: uploadJson?.messages || "Gagal upload file ke Mayar." }),
+        { status: uploadRes.status, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    const fileId = uploadJson?.data?.id || uploadJson?.id;
+    const fileUrl = uploadJson?.data?.url || uploadJson?.url;
+
+    // Step 2: Create the digital product
+    const productPayload = {
+      name: `${topic} — ${productLabel || "Produk Digital Islami"}`,
+      type: "digital_product",
+      description: `Produk digital Islami bertema Ramadhan: ${topic}. Dibuat dengan RAIA.`,
+      amount: 0,
+      multipleFiles: fileId
+        ? [{ id: fileId, url: fileUrl, name: fileName }]
+        : undefined,
+    };
+
+    const createRes = await fetch(`${mayarBaseUrl}/product`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${MAYAR_API_KEY}`,
+        "Content-Type": "application/json",
       },
-      body: formData,
+      body: JSON.stringify(productPayload),
     });
 
-    const result = await response.json();
-
-    if (!response.ok) {
-      console.error("Mayar API error:", response.status, JSON.stringify(result));
+    const createJson = await createRes.json();
+    if (!createRes.ok) {
+      console.error("Mayar create product error:", createRes.status, JSON.stringify(createJson));
       return new Response(
-        JSON.stringify({ error: result?.messages || "Gagal membuat produk di Mayar." }),
-        { status: response.status, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        JSON.stringify({ error: createJson?.messages || "Gagal membuat produk di Mayar." }),
+        { status: createRes.status, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
     return new Response(
       JSON.stringify({
         success: true,
-        link: result?.data?.link || null,
-        productId: result?.data?.id || null,
+        link: createJson?.data?.link || createJson?.link || null,
+        productId: createJson?.data?.id || createJson?.id || null,
         message: "Produk berhasil dibuat di Mayar!",
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
