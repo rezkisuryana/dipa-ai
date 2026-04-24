@@ -147,6 +147,7 @@ const Index = () => {
       );
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
+      if (data?.success === false) throw new Error(data.error || "Integrasi Mayar tidak tersedia.");
       if (data?.link) {
         window.open(data.link, "_blank");
         toast.success("Produk berhasil dibuat di Mayar!");
@@ -157,6 +158,8 @@ const Index = () => {
       console.error(e);
       if (e?.message?.includes("API key")) {
         toast.error("API Key Mayar belum dikonfigurasi. Hubungi admin.");
+      } else if (e?.message?.includes("endpoint") || e?.message?.includes("404") || e?.message?.includes("dinonaktifkan")) {
+        toast.error("Integrasi otomatis Mayar belum didukung oleh endpoint API Mayar saat ini.");
       } else {
         toast.error("Gagal upload ke Mayar: " + (e?.message || "Unknown error"));
       }
