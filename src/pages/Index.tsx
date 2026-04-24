@@ -493,7 +493,7 @@ const Index = () => {
               <button
                 key={btn.label}
                 onClick={btn.action}
-                disabled={'disabled' in btn ? btn.disabled : false}
+                disabled={false}
                 className="btn-glow py-3 px-4 rounded-lg cursor-pointer text-[13px] font-semibold flex items-center justify-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{
                   background: btn.primary ? "linear-gradient(135deg, hsl(var(--emerald)), hsl(var(--emerald-light)), hsl(var(--gold)))" : "hsl(var(--muted))",
