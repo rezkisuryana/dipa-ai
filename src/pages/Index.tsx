@@ -130,41 +130,32 @@ const Index = () => {
     window.open(waUrl, "_blank");
   };
 
-  const [isMayarLoading, setIsMayarLoading] = useState(false);
+  const handleUploadLynk = async () => {
+    const productName = selectedProduct?.label || "Produk Digital";
+    const description = `${topic} — ${productName} Islami\n\nProduk digital berkualitas tinggi untuk Ramadhan 1447H. Dibuat dengan AI RAIA.\n\n--- ISI PRODUK ---\n\n${generatedContent}`;
 
-  const handleUploadMayar = async () => {
-    setIsMayarLoading(true);
     try {
-      const { data, error } = await import("@/integrations/supabase/client").then(m =>
-        m.supabase.functions.invoke("upload-mayar", {
-          body: {
-            topic,
-            productType: selectedType,
-            content: generatedContent,
-            productLabel: selectedProduct?.label,
-          },
-        })
-      );
-      if (error) throw error;
-      if (data?.error) throw new Error(data.error);
-      if (data?.success === false) throw new Error(data.error || "Integrasi Mayar tidak tersedia.");
-      if (data?.link) {
-        window.open(data.link, "_blank");
-        toast.success("Produk berhasil dibuat di Mayar!");
-      } else {
-        toast.success("Produk berhasil diupload ke Mayar!");
-      }
+      // 1. Copy konten lengkap (judul + deskripsi + isi) ke clipboard
+      await navigator.clipboard.writeText(description);
+
+      // 2. Download .txt sebagai file produk siap upload
+      const blob = new Blob([generatedContent], { type: "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${topic.replace(/\s+/g, "-").toLowerCase()}-ramadhan.txt`;
+      a.click();
+      URL.revokeObjectURL(url);
+
+      toast.success("Konten tersalin & file diunduh! Membuka Lynk.id...");
+
+      // 3. Buka dashboard Lynk.id new product di tab baru
+      setTimeout(() => {
+        window.open("https://lynk.id/dashboard/product/new", "_blank");
+      }, 600);
     } catch (e: any) {
       console.error(e);
-      if (e?.message?.includes("API key")) {
-        toast.error("API Key Mayar belum dikonfigurasi. Hubungi admin.");
-      } else if (e?.message?.includes("endpoint") || e?.message?.includes("404") || e?.message?.includes("dinonaktifkan")) {
-        toast.error("Integrasi otomatis Mayar belum didukung oleh endpoint API Mayar saat ini.");
-      } else {
-        toast.error("Gagal upload ke Mayar: " + (e?.message || "Unknown error"));
-      }
-    } finally {
-      setIsMayarLoading(false);
+      toast.error("Gagal menyiapkan konten Lynk.id: " + (e?.message || "Unknown error"));
     }
   };
 
@@ -494,7 +485,7 @@ const Index = () => {
           <div className="grid gap-2.5 mb-6" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))" }}>
             {[
               { icon: "📄", label: "Preview & Print PDF", action: handlePrint, primary: true },
-              { icon: "🚀", label: isMayarLoading ? "⏳ Uploading..." : "Upload ke Mayar", action: handleUploadMayar, primary: false, disabled: isMayarLoading },
+              { icon: "🚀", label: "Upload ke Lynk.id", action: handleUploadLynk, primary: false },
               { icon: "📱", label: "Share ke WhatsApp", action: handleShareWhatsApp, primary: false },
               { icon: "📋", label: copied ? "✅ Tersalin!" : "Salin Konten", action: handleCopy, primary: false },
               { icon: "💾", label: "Download .txt", action: handleExportText, primary: false },
@@ -502,7 +493,7 @@ const Index = () => {
               <button
                 key={btn.label}
                 onClick={btn.action}
-                disabled={'disabled' in btn ? btn.disabled : false}
+                disabled={false}
                 className="btn-glow py-3 px-4 rounded-lg cursor-pointer text-[13px] font-semibold flex items-center justify-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{
                   background: btn.primary ? "linear-gradient(135deg, hsl(var(--emerald)), hsl(var(--emerald-light)), hsl(var(--gold)))" : "hsl(var(--muted))",
