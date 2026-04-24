@@ -149,9 +149,9 @@ const Index = () => {
 
       toast.success("Konten tersalin & file diunduh! Membuka Lynk.id...");
 
-      // 3. Buka dashboard Lynk.id new product di tab baru
+      // 3. Buka dashboard Lynk.id di tab baru (login dulu lalu klik "Tambah Produk")
       setTimeout(() => {
-        window.open("https://lynk.id/dashboard/product/new", "_blank");
+        window.open("https://app.lynk.id/", "_blank");
       }, 600);
     } catch (e: any) {
       console.error(e);
