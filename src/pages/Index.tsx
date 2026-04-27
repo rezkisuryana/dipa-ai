@@ -106,7 +106,7 @@ const Index = () => {
     setTimeout(async () => {
       try {
         setIsExporting(true);
-        const filename = `${slug(topic)}-produkly.pdf`;
+        const filename = `${slug(topic)}-dipa.pdf`;
         await exportPDF(filename);
         toast.success("PDF berhasil diunduh!");
       } catch (e) {
@@ -123,20 +123,20 @@ const Index = () => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `${slug(topic)}-produkly.txt`;
+    a.download = `${slug(topic)}-dipa.txt`;
     a.click();
   };
 
   const handleShareWhatsApp = () => {
     const productName = selectedProduct?.label || "Produk Digital";
-    const promoText = `🚀 *${topic}* — ${productName} siap pakai!\n\nDibuat dengan AI Produkly. Praktis, profesional, dan langsung bisa kamu jual atau gunakan.\n\n✨ Coba juga: ${window.location.origin}\n\n#ProdukDigital #Produkly #AI`;
+    const promoText = `🚀 *${topic}* — ${productName} siap pakai!\n\nDibuat dengan DIPA (Digital Product AI Assistant). Praktis, profesional, dan langsung bisa kamu jual atau gunakan.\n\n✨ Coba juga: ${window.location.origin}\n\n#ProdukDigital #DIPA #AI`;
     const waUrl = `https://wa.me/?text=${encodeURIComponent(promoText)}`;
     window.open(waUrl, "_blank");
   };
 
   const handleUploadLynk = async () => {
     const productName = selectedProduct?.label || "Produk Digital";
-    const description = `${topic} — ${productName}\n\nProduk digital berkualitas tinggi dibuat dengan AI Produkly.\n\n--- ISI PRODUK ---\n\n${generatedContent}`;
+    const description = `${topic} — ${productName}\n\nProduk digital berkualitas tinggi dibuat dengan DIPA (Digital Product AI Assistant).\n\n--- ISI PRODUK ---\n\n${generatedContent}`;
 
     try {
       await navigator.clipboard.writeText(description);
@@ -145,7 +145,7 @@ const Index = () => {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `${slug(topic)}-produkly.txt`;
+      a.download = `${slug(topic)}-dipa.txt`;
       a.click();
       URL.revokeObjectURL(url);
 
@@ -197,8 +197,12 @@ const Index = () => {
 
         {/* Title */}
         <h1 className="font-display text-center leading-none mb-3 animate-fade-up font-bold tracking-tight" style={{ fontSize: "clamp(40px, 9vw, 84px)", animationDelay: "0.1s" }}>
-          <span className="brand-gradient">Produkly</span>
+          <span className="brand-gradient">DIPA</span>
         </h1>
+
+        <p className="text-foreground/50 text-center text-[11px] tracking-[4px] uppercase font-semibold mb-3 font-display animate-fade-up" style={{ animationDelay: "0.15s" }}>
+          Digital Product AI Assistant
+        </p>
 
         <p className="text-muted-foreground text-center max-w-[520px] leading-relaxed mb-12 font-body animate-fade-up font-light" style={{ fontSize: "clamp(14px, 2.5vw, 17px)", animationDelay: "0.2s" }}>
           Buat produk digital siap jual — e-book, planner, template, course — <br />
@@ -457,7 +461,7 @@ const Index = () => {
               onClick={async () => {
                 try {
                   setIsExporting(true);
-                  const filename = `${slug(topic)}-produkly.pdf`;
+                  const filename = `${slug(topic)}-dipa.pdf`;
                   await exportPDF(filename);
                   toast.success("PDF berhasil diunduh!");
                 } catch (e) {

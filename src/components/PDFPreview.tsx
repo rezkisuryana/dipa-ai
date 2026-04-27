@@ -82,8 +82,8 @@ const PDFPreview = ({ content, productType, topic }: PDFPreviewProps) => {
               <div style={{ fontFamily: "'Space Grotesk', sans-serif", color: "#a5f3fc", fontSize: 10, letterSpacing: 3, textTransform: "uppercase" as const, marginBottom: 2, fontWeight: 600 }}>
                 {type?.sublabel} • Digital Product
               </div>
-              <div style={{ fontFamily: "'Space Grotesk', sans-serif", color: "rgba(255,255,255,0.5)", fontSize: 10, fontWeight: 600, letterSpacing: 1 }}>
-                PRODUKLY
+              <div style={{ fontFamily: "'Space Grotesk', sans-serif", color: "rgba(255,255,255,0.5)", fontSize: 10, fontWeight: 600, letterSpacing: 2 }}>
+                DIPA · Digital Product AI Assistant
               </div>
             </div>
           </div>
@@ -105,7 +105,7 @@ const PDFPreview = ({ content, productType, topic }: PDFPreviewProps) => {
       {/* Footer */}
       <div data-pdf-section style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "20px 40px", background: "linear-gradient(135deg, #1e1b4b, #6d28d9)" }}>
         <div>
-          <div style={{ fontFamily: "'Space Grotesk', sans-serif", color: "#a5f3fc", fontSize: 12, fontWeight: 700, letterSpacing: 1 }}>PRODUKLY</div>
+          <div style={{ fontFamily: "'Space Grotesk', sans-serif", color: "#a5f3fc", fontSize: 12, fontWeight: 700, letterSpacing: 2 }}>DIPA</div>
         </div>
         <div style={{ fontFamily: "'Inter', sans-serif", color: "rgba(255,255,255,0.4)", fontSize: 10, textAlign: "right" as const }}>
           Made with AI<br />
