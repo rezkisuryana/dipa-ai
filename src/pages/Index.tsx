@@ -231,19 +231,30 @@ const Index = () => {
           ✨ Mulai Buat Produk
         </button>
 
-        <p className="text-foreground/30 text-[11px] mt-4 animate-fade-up" style={{ animationDelay: "0.5s" }}>
+        <p className="text-foreground/30 text-[11px] mt-4 animate-fade-up font-body" style={{ animationDelay: "0.5s" }}>
           Gratis • Tanpa simpan data
         </p>
-      </div>
 
-      {/* Bottom stats */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-10 text-foreground/30 text-xs text-center">
-        {[["6", "Jenis Produk"], ["AI", "Powered"], ["PDF", "Instant"]].map(([num, label]) => (
-          <div key={label}>
-            <div className="text-primary text-lg font-bold font-display">{num}</div>
-            <div>{label}</div>
+        {/* Bottom stats */}
+        <div className="mt-14 w-full max-w-[520px] animate-fade-up" style={{ animationDelay: "0.6s" }}>
+          <div className="grid grid-cols-3 gap-3">
+            {[
+              { num: "6", label: "Jenis Produk", icon: "🎁", hint: "Gratis & siap pakai" },
+              { num: "AI", label: "Powered", icon: "🤖", hint: "Generate otomatis" },
+              { num: "PDF", label: "Instant", icon: "📄", hint: "Export 1 klik" },
+            ].map(s => (
+              <div
+                key={s.label}
+                className="bg-foreground/[0.04] border border-foreground/10 rounded-2xl px-3 py-4 text-center backdrop-blur-sm hover:bg-foreground/[0.07] hover:border-primary/30 transition-all"
+              >
+                <div className="text-lg mb-1.5 opacity-80">{s.icon}</div>
+                <div className="font-display text-primary text-2xl font-bold leading-none mb-1.5 tracking-tight">{s.num}</div>
+                <div className="text-foreground/70 text-[11px] uppercase tracking-[1.5px] font-semibold mb-1">{s.label}</div>
+                <div className="text-foreground/40 text-[10px] font-body leading-tight">{s.hint}</div>
+              </div>
+            ))}
           </div>
-        ))}
+        </div>
       </div>
     </div>
   );
