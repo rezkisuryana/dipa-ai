@@ -359,26 +359,26 @@ const Landing = () => {
       </section>
 
       {/* ───── INTEGRATIONS ───── */}
-      <section id="integrations" className="px-6 py-20"
+      <section id="integrations" className="px-4 sm:px-6 py-16 sm:py-20"
         style={{ background: "var(--gradient-aurora)" }}>
-        <div className="max-w-5xl mx-auto bg-white/70 backdrop-blur border border-white rounded-3xl p-10 shadow-soft">
-          <div className="text-center mb-10">
+        <div className="max-w-5xl mx-auto bg-white/70 backdrop-blur border border-white rounded-3xl p-6 sm:p-10 shadow-soft">
+          <div className="text-center mb-8 sm:mb-10">
             <div className="inline-block bg-white text-muted-foreground rounded-full px-4 py-1 text-xs font-semibold uppercase tracking-wider mb-4 border border-border">
               Integrasi
             </div>
             <h2 className="font-display font-bold tracking-tight"
-              style={{ fontSize: "clamp(26px, 3.5vw, 36px)" }}>
+              style={{ fontSize: "clamp(22px, 3.5vw, 36px)" }}>
               Tools Favoritmu Sudah Terhubung
             </h2>
           </div>
-          <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
+          <div className="grid grid-cols-3 md:grid-cols-6 gap-3 sm:gap-4">
             {INTEGRATIONS.map((i) => (
               <div
                 key={i.name}
-                className="bg-white rounded-2xl p-5 flex flex-col items-center gap-2 border border-border shadow-sm hover:shadow-md transition-all"
+                className="bg-white rounded-2xl p-3 sm:p-5 flex flex-col items-center gap-2 border border-border shadow-sm hover:shadow-md transition-all"
               >
-                <div className="text-3xl">{i.emoji}</div>
-                <div className="text-xs font-semibold text-foreground">{i.name}</div>
+                <div className="text-2xl sm:text-3xl">{i.emoji}</div>
+                <div className="text-[11px] sm:text-xs font-semibold text-foreground text-center">{i.name}</div>
               </div>
             ))}
           </div>
@@ -386,30 +386,30 @@ const Landing = () => {
       </section>
 
       {/* ───── TESTIMONIALS ───── */}
-      <section id="testimonials" className="px-6 py-24 bg-background">
+      <section id="testimonials" className="px-4 sm:px-6 py-16 sm:py-24 bg-background">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-14">
+          <div className="text-center mb-10 sm:mb-14">
             <div className="inline-block bg-muted text-muted-foreground rounded-full px-4 py-1 text-xs font-semibold uppercase tracking-wider mb-4">
               Testimoni
             </div>
             <h2 className="font-display font-bold tracking-tight"
-              style={{ fontSize: "clamp(28px, 4vw, 44px)" }}>
+              style={{ fontSize: "clamp(24px, 4vw, 44px)" }}>
               Dipakai Ribuan Creator Indonesia
             </h2>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-5">
+          <div className="grid md:grid-cols-3 gap-4 sm:gap-5">
             {TESTIMONIALS.map((t, i) => (
               <div
                 key={t.name}
-                className={`rounded-3xl p-7 border transition-all ${
+                className={`rounded-3xl p-6 sm:p-7 border transition-all ${
                   i === 0
                     ? "text-white border-transparent shadow-brand"
                     : "bg-white border-border shadow-soft"
                 }`}
                 style={i === 0 ? { background: "var(--gradient-brand)" } : {}}
               >
-                <p className={`text-sm leading-relaxed mb-6 ${i === 0 ? "text-white/95" : "text-foreground"}`}>
+                <p className={`text-sm leading-relaxed mb-5 sm:mb-6 ${i === 0 ? "text-white/95" : "text-foreground"}`}>
                   "{t.quote}"
                 </p>
                 <div className="flex items-center gap-3">
@@ -434,14 +434,14 @@ const Landing = () => {
       </section>
 
       {/* ───── FAQ ───── */}
-      <section id="faq" className="px-6 py-24 bg-muted/30">
+      <section id="faq" className="px-4 sm:px-6 py-16 sm:py-24 bg-muted/30">
         <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-12">
+          <div className="text-center mb-10 sm:mb-12">
             <div className="inline-block bg-white text-muted-foreground rounded-full px-4 py-1 text-xs font-semibold uppercase tracking-wider mb-4 border border-border">
               FAQ
             </div>
             <h2 className="font-display font-bold tracking-tight"
-              style={{ fontSize: "clamp(26px, 3.5vw, 38px)" }}>
+              style={{ fontSize: "clamp(22px, 3.5vw, 38px)" }}>
               Pertanyaan yang Sering Ditanyakan
             </h2>
           </div>
@@ -456,7 +456,7 @@ const Landing = () => {
                 >
                   <button
                     onClick={() => setOpenFaq(open ? null : i)}
-                    className="w-full px-6 py-4 flex items-center justify-between gap-4 text-left"
+                    className="w-full px-5 sm:px-6 py-4 flex items-center justify-between gap-4 text-left"
                   >
                     <span className="font-semibold text-sm md:text-base">{f.q}</span>
                     <ChevronDown
@@ -466,7 +466,7 @@ const Landing = () => {
                     />
                   </button>
                   {open && (
-                    <div className="px-6 pb-5 text-sm text-muted-foreground leading-relaxed">
+                    <div className="px-5 sm:px-6 pb-5 text-sm text-muted-foreground leading-relaxed">
                       {f.a}
                     </div>
                   )}
@@ -478,18 +478,18 @@ const Landing = () => {
       </section>
 
       {/* ───── CTA ───── */}
-      <section className="px-6 py-24" style={{ background: "var(--gradient-hero)" }}>
+      <section className="px-4 sm:px-6 py-16 sm:py-24" style={{ background: "var(--gradient-hero)" }}>
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="font-display font-bold tracking-tight mb-4"
-            style={{ fontSize: "clamp(28px, 4vw, 44px)" }}>
+            style={{ fontSize: "clamp(24px, 4vw, 44px)" }}>
             Siap Bangun Produk Digital Pertamamu?
           </h2>
-          <p className="text-muted-foreground mb-8">
+          <p className="text-sm sm:text-base text-muted-foreground mb-7 sm:mb-8">
             Mulai gratis sekarang — tidak perlu sign up, langsung generate.
           </p>
           <Link
             to="/app"
-            className="inline-flex items-center gap-2 rounded-full px-8 py-3.5 text-white font-semibold shadow-md hover:shadow-lg transition-all"
+            className="inline-flex items-center gap-2 rounded-full px-6 sm:px-8 py-3 sm:py-3.5 text-white font-semibold shadow-md hover:shadow-lg transition-all"
             style={{ background: "var(--gradient-brand)" }}
           >
             <Wand2 className="w-5 h-5" />
@@ -499,9 +499,9 @@ const Landing = () => {
       </section>
 
       {/* ───── FOOTER ───── */}
-      <footer className="px-6 py-10 border-t border-border bg-background">
+      <footer className="px-4 sm:px-6 py-8 sm:py-10 border-t border-border bg-background">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center justify-center gap-2 text-center">
             <div
               className="w-7 h-7 rounded-lg flex items-center justify-center text-white"
               style={{ background: "var(--gradient-brand)" }}
