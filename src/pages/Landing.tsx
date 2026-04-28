@@ -304,17 +304,17 @@ const Landing = () => {
         </div>
 
         {/* Active feature card */}
-        <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-8 items-center bg-white rounded-3xl p-8 md:p-10 border border-border shadow-soft">
+        <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-6 sm:gap-8 items-center bg-white rounded-3xl p-6 sm:p-8 md:p-10 border border-border shadow-soft">
           <div>
-            <h3 className="font-display font-bold text-2xl md:text-3xl mb-4 leading-tight">
+            <h3 className="font-display font-bold text-xl sm:text-2xl md:text-3xl mb-3 sm:mb-4 leading-tight">
               {activeFeature.title}
             </h3>
-            <p className="text-muted-foreground mb-6 leading-relaxed">{activeFeature.desc}</p>
+            <p className="text-sm sm:text-base text-muted-foreground mb-5 sm:mb-6 leading-relaxed">{activeFeature.desc}</p>
             <ul className="space-y-3">
               {activeFeature.bullets.map((b) => (
                 <li key={b} className="flex items-center gap-3 text-sm">
                   <div
-                    className="w-5 h-5 rounded-full flex items-center justify-center text-white"
+                    className="w-5 h-5 shrink-0 rounded-full flex items-center justify-center text-white"
                     style={{ background: "var(--gradient-brand)" }}
                   >
                     <Check className="w-3 h-3" />
@@ -325,7 +325,7 @@ const Landing = () => {
             </ul>
             <Link
               to="/app"
-              className="inline-flex items-center gap-2 mt-7 rounded-full px-5 py-2.5 text-white text-sm font-semibold shadow-md hover:shadow-lg transition-all"
+              className="inline-flex items-center gap-2 mt-6 sm:mt-7 rounded-full px-5 py-2.5 text-white text-sm font-semibold shadow-md hover:shadow-lg transition-all"
               style={{ background: "var(--gradient-brand)" }}
             >
               Coba Sekarang <ArrowRight className="w-4 h-4" />
@@ -334,10 +334,10 @@ const Landing = () => {
 
           {/* Visual mock */}
           <div
-            className="rounded-2xl p-6 h-72 flex items-center justify-center relative overflow-hidden"
+            className="rounded-2xl p-4 sm:p-6 h-56 sm:h-72 flex items-center justify-center relative overflow-hidden"
             style={{ background: "var(--gradient-aurora)" }}
           >
-            <div className="absolute inset-4 bg-white/80 backdrop-blur rounded-xl border border-white shadow-lg p-5 flex flex-col gap-2">
+            <div className="absolute inset-3 sm:inset-4 bg-white/80 backdrop-blur rounded-xl border border-white shadow-lg p-4 sm:p-5 flex flex-col gap-2">
               <div className="flex items-center gap-2 mb-2">
                 <div className="w-2.5 h-2.5 rounded-full bg-red-300" />
                 <div className="w-2.5 h-2.5 rounded-full bg-yellow-300" />
