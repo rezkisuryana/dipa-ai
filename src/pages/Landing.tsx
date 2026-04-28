@@ -264,15 +264,15 @@ const Landing = () => {
       </section>
 
       {/* ───── FEATURES TABS ───── */}
-      <section id="features" className="px-6 py-24 bg-background">
-        <div className="max-w-6xl mx-auto text-center mb-12">
+      <section id="features" className="px-4 sm:px-6 py-16 sm:py-24 bg-background">
+        <div className="max-w-6xl mx-auto text-center mb-10 sm:mb-12">
           <div className="inline-block bg-muted text-muted-foreground rounded-full px-4 py-1 text-xs font-semibold uppercase tracking-wider mb-4">
             Features
           </div>
           <h2 className="font-display font-bold tracking-tight mb-4"
-            style={{ fontSize: "clamp(28px, 4vw, 44px)" }}>
+            style={{ fontSize: "clamp(24px, 4vw, 44px)" }}>
             Semua yang Kamu Butuhkan untuk
-            <br />
+            <br className="hidden sm:block" />{" "}
             <span className="bg-clip-text text-transparent"
               style={{ backgroundImage: "var(--gradient-brand)" }}>
               Produk Digital Profesional
