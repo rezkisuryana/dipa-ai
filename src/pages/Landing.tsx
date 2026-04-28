@@ -102,6 +102,7 @@ const Landing = () => {
   const [activeTab, setActiveTab] = useState("ai");
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [email, setEmail] = useState("");
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   const activeFeature = FEATURE_TABS.find((t) => t.id === activeTab)!;
 
@@ -109,7 +110,7 @@ const Landing = () => {
     <div className="min-h-screen bg-background text-foreground font-body">
       {/* ───── NAVBAR ───── */}
       <header className="sticky top-0 z-50 backdrop-blur-xl bg-background/70 border-b border-border/50">
-        <nav className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+        <nav className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
             <div
               className="w-9 h-9 rounded-xl flex items-center justify-center text-white text-lg shadow-md"
@@ -130,35 +131,73 @@ const Landing = () => {
             ))}
           </ul>
 
-          <Link
-            to="/app"
-            className="rounded-full px-5 py-2 text-white text-sm font-semibold shadow-md hover:shadow-lg transition-all"
-            style={{ background: "var(--gradient-brand)" }}
-          >
-            Mulai Gratis
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link
+              to="/app"
+              className="hidden sm:inline-flex rounded-full px-4 sm:px-5 py-2 text-white text-sm font-semibold shadow-md hover:shadow-lg transition-all"
+              style={{ background: "var(--gradient-brand)" }}
+            >
+              Mulai Gratis
+            </Link>
+            <button
+              onClick={() => setMobileNavOpen((v) => !v)}
+              className="md:hidden w-10 h-10 rounded-xl border border-border bg-white flex items-center justify-center"
+              aria-label="Toggle menu"
+            >
+              {mobileNavOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
         </nav>
+
+        {/* Mobile menu */}
+        {mobileNavOpen && (
+          <div className="md:hidden border-t border-border/50 bg-background/95 backdrop-blur-xl">
+            <ul className="px-4 py-3 flex flex-col gap-1 text-sm">
+              {NAV_LINKS.map((l) => (
+                <li key={l.href}>
+                  <a
+                    href={l.href}
+                    onClick={() => setMobileNavOpen(false)}
+                    className="block px-3 py-2.5 rounded-lg text-foreground hover:bg-muted transition-colors"
+                  >
+                    {l.label}
+                  </a>
+                </li>
+              ))}
+              <li className="pt-2">
+                <Link
+                  to="/app"
+                  onClick={() => setMobileNavOpen(false)}
+                  className="block text-center rounded-full px-5 py-2.5 text-white text-sm font-semibold shadow-md"
+                  style={{ background: "var(--gradient-brand)" }}
+                >
+                  Mulai Gratis
+                </Link>
+              </li>
+            </ul>
+          </div>
+        )}
       </header>
 
       {/* ───── HERO ───── */}
       <section
-        className="relative overflow-hidden px-6 pt-20 pb-28"
+        className="relative overflow-hidden px-4 sm:px-6 pt-12 sm:pt-20 pb-20 sm:pb-28"
         style={{ background: "var(--gradient-hero)" }}
       >
         {/* Soft floating orbs */}
-        <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full opacity-50 blur-3xl"
+        <div className="absolute -top-32 -left-32 w-72 sm:w-96 h-72 sm:h-96 rounded-full opacity-50 blur-3xl"
           style={{ background: "radial-gradient(circle, hsl(var(--violet-light)), transparent 70%)" }} />
-        <div className="absolute -top-20 right-0 w-[500px] h-[500px] rounded-full opacity-40 blur-3xl"
+        <div className="absolute -top-20 right-0 w-80 sm:w-[500px] h-80 sm:h-[500px] rounded-full opacity-40 blur-3xl"
           style={{ background: "radial-gradient(circle, hsl(var(--cyan-light)), transparent 70%)" }} />
 
         <div className="relative max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 bg-white/70 backdrop-blur border border-border rounded-full px-4 py-1.5 text-xs font-semibold text-primary mb-6 shadow-sm">
+          <div className="inline-flex items-center gap-2 bg-white/70 backdrop-blur border border-border rounded-full px-3 sm:px-4 py-1.5 text-[11px] sm:text-xs font-semibold text-primary mb-5 sm:mb-6 shadow-sm">
             <Sparkles className="w-3.5 h-3.5" />
             AI-Powered Digital Product Builder
           </div>
 
-          <h1 className="font-display font-bold tracking-tight leading-[1.05] mb-5"
-            style={{ fontSize: "clamp(38px, 6.5vw, 68px)" }}>
+          <h1 className="font-display font-bold tracking-tight leading-[1.1] sm:leading-[1.05] mb-4 sm:mb-5"
+            style={{ fontSize: "clamp(30px, 6.5vw, 68px)" }}>
             Buat Produk Digital
             <br />
             <span
@@ -169,7 +208,7 @@ const Landing = () => {
             </span>
           </h1>
 
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto mb-9 leading-relaxed">
+          <p className="text-muted-foreground text-base sm:text-lg max-w-2xl mx-auto mb-7 sm:mb-9 leading-relaxed px-2">
             DIPA bantu creator & freelancer auto-generate e-book, planner, template, dan course
             dengan AI — lalu langsung export PDF dan share ke marketplace.
           </p>
@@ -180,14 +219,14 @@ const Landing = () => {
               e.preventDefault();
               window.location.href = "/app";
             }}
-            className="flex items-center gap-2 bg-white/90 backdrop-blur p-1.5 rounded-full border border-border shadow-soft max-w-md mx-auto"
+            className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-2 bg-white/90 backdrop-blur p-2 sm:p-1.5 rounded-2xl sm:rounded-full border border-border shadow-soft max-w-md mx-auto"
           >
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Masukkan email kamu"
-              className="flex-1 bg-transparent px-4 py-2 text-sm focus:outline-none text-foreground placeholder:text-muted-foreground"
+              className="flex-1 bg-transparent px-4 py-2.5 text-sm focus:outline-none text-foreground placeholder:text-muted-foreground"
             />
             <button
               type="submit"
@@ -204,15 +243,15 @@ const Landing = () => {
         </div>
 
         {/* Product Cards Grid */}
-        <div id="products" className="relative max-w-6xl mx-auto mt-20 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div id="products" className="relative max-w-6xl mx-auto mt-12 sm:mt-20 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
           {PRODUCT_TYPES.map((p) => (
             <div
               key={p.id}
-              className="bg-white rounded-2xl p-5 border border-border shadow-soft hover:shadow-brand hover:-translate-y-1 transition-all"
+              className="bg-white rounded-2xl p-4 sm:p-5 border border-border shadow-soft hover:shadow-brand hover:-translate-y-1 transition-all"
             >
-              <div className="text-3xl mb-3">{p.icon}</div>
-              <div className="font-display font-bold text-sm mb-1">{p.label}</div>
-              <div className="text-[11px] uppercase tracking-wide font-semibold mb-2"
+              <div className="text-2xl sm:text-3xl mb-2 sm:mb-3">{p.icon}</div>
+              <div className="font-display font-bold text-sm mb-1 leading-tight">{p.label}</div>
+              <div className="text-[10px] sm:text-[11px] uppercase tracking-wide font-semibold mb-2"
                 style={{ color: p.color }}>
                 {p.sublabel}
               </div>
