@@ -3,8 +3,6 @@ import { Link } from "react-router-dom";
 import { PRODUCT_TYPES } from "@/lib/constants";
 import {
   Sparkles,
-  FileText,
-  Zap,
   Check,
   ChevronDown,
   ArrowRight,
@@ -12,8 +10,8 @@ import {
   Download,
   Share2,
   Wand2,
-  Layers,
-  ShoppingBag,
+  Menu,
+  X,
 } from "lucide-react";
 
 const NAV_LINKS = [
